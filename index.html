@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voyager | Premium Trip Planner</title>
+    <style>
+        :root {
+            --primary: #3b82f6; --primary-hover: #2563eb;
+            --bg: #0f172a; --card-bg: #1e293b;
+            --text: #f8fafc; --text-muted: #94a3b8;
+            --border: #334155; --error: #ef4444;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, sans-serif; }
+        body { background-color: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; padding: 40px 20px; }
+        
+        .container { width: 100%; max-width: 600px; background: var(--card-bg); border-radius: 24px; padding: 40px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); border: 1px solid var(--border); position: relative; }
+        
+        /* Progress Indicator */
+        .progress-bar { display: flex; justify-content: space-between; margin-bottom: 40px; position: relative; }
+        .progress-bar::before { content: ""; position: absolute; top: 50%; left: 0; width: 100%; height: 2px; background: var(--border); z-index: 1; transform: translateY(-50%); }
+        .step { width: 35px; height: 35px; border-radius: 50%; background: var(--card-bg); border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-weight: bold; z-index: 2; transition: all 0.3s ease; color: var(--text-muted); }
+        .step.active { border-color: var(--primary); color: var(--primary); background: var(--bg); box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); }
+        .step.completed { background: var(--primary); border-color: var(--primary); color: white; }
+
+        /* Content Sections */
+        .section { display: none; animation: fadeIn 0.4s ease; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        h2 { font-size: 28px; margin-bottom: 8px; font-weight: 800; }
+        p.subtitle { color: var(--text-muted); margin-bottom: 30px; font-size: 15px; }
+
+        /* Form Elements */
+        label { display: block; margin-bottom: 8px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
+        select, input, textarea { width: 100%; padding: 14px 16px; margin-bottom: 20px; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; color: white; font-size: 16px; transition: border-color 0.2s; outline: none; }
+        select:focus, input:focus { border-color: var(--primary); }
+        select:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .error-msg { color: var(--error); font-size: 12px; margin-top: -15px; margin-bottom: 15px; display: none; }
+
+        /* Buttons */
+        .nav-btns { display: flex; gap: 12px; margin-top: 20px; }
+        .btn { flex: 1; padding: 16px; border-radius: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; border: none; font-size: 16px; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
+        .btn-secondary { background: var(--border); color: var(--text); }
+        
+        /* Summary Table */
+        .summary-card { background: var(--bg); padding: 20px; border-radius: 16px; margin-bottom: 20px; border: 1px dashed var(--border); }
+        .summary-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #ffffff0a; }
+        .summary-item:last-child { border: none; }
+        .summary-label { color: var(--text-muted); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="progress-bar">
+        <div class="step active" id="dot1">1</div>
+        <div class="step" id="dot2">2</div>
+        <div class="step" id="dot3">3</div>
+        <div class="step" id="dot4">4</div>
+    </div>
+
+    <form id="tripForm">
+        <!-- Step 1: Location -->
+        <div class="section active" id="step1">
+            <h2>Destination</h2>
+            <p class="subtitle">Where in the world are we going?</p>
+            
+            <label>Continent</label>
+            <select id="continent" required onchange="handleContinentChange()">
+                <option value="">Select Continent</option>
+                <option value="North America">North America</option>
+                <option value="Europe">Europe</option>
+                <option value="Asia">Asia</option>
+            </select>
+
+            <label>Country</label>
+            <select id="country" disabled required onchange="handleCountryChange()">
+                <option value="">Select Country</option>
+            </select>
+
+            <label id="regionLabel">City / State</label>
+            <select id="region" disabled required>
+                <option value="">Select City</option>
+            </select>
+
+            <div class="nav-btns">
+                <button type="button" class="btn btn-primary" onclick="validateAndNext(2)">Continue</button>
+            </div>
+        </div>
+
+        <!-- Step 2: Logistics -->
+        <div class="section" id="step2">
+            <h2>Logistics</h2>
+            <p class="subtitle">When and with whom?</p>
+            
+            <div class="grid">
+                <div>
+                    <label>Start Date</label>
+                    <input type="date" id="startDate" required>
+                </div>
+                <div>
+                    <label>End Date</label>
+                    <input type="date" id="endDate" required>
+                </div>
+            </div>
+
+            <label>Number of Travelers</label>
+            <input type="number" id="guests" min="1" max="20" value="1" required>
+
+            <label>Budget Level</label>
+            <select id="budget">
+                <option value="Economy">Economy (Budget-friendly)</option>
+                <option value="Standard" selected>Standard (Comfortable)</option>
+                <option value="Luxury">Luxury (Premium)</option>
+            </select>
+
+            <div class="nav-btns">
+                <button type="button" class="btn btn-secondary" onclick="goStep(1)">Back</button>
+                <button type="button" class="btn btn-primary" onclick="validateAndNext(3)">Continue</button>
+            </div>
+        </div>
+
+        <!-- Step 3: Preferences -->
+        <div class="section" id="step3">
+            <h2>Personalize</h2>
+            <p class="subtitle">What kind of trip is this?</p>
+            
+            <label>Travel Style</label>
+            <select id="style">
+                <option value="Relaxing">Relaxing & Spa</option>
+                <option value="Adventure">Adventure & Outdoors</option>
+                <option value="Cultural">History & Culture</option>
+                <option value="Foodie">Food & Culinary</option>
+            </select>
+
+            <label>Notes / Special Requests</label>
+            <textarea id="notes" rows="4" placeholder="Any dietary restrictions or must-see spots?"></textarea>
+
+            <div class="nav-btns">
+                <button type="button" class="btn btn-secondary" onclick="goStep(2)">Back</button>
+                <button type="button" class="btn btn-primary" onclick="buildSummary()">Review Plan</button>
+            </div>
+        </div>
+
+        <!-- Step 4: Summary -->
+        <div class="section" id="step4">
+            <h2>Trip Summary</h2>
+            <p class="subtitle">Confirm your details before generating.</p>
+            
+            <div class="summary-card" id="summaryOutput">
+                <!-- JavaScript populates this -->
+            </div>
+
+            <div class="nav-btns">
+                <button type="button" class="btn btn-secondary" onclick="goStep(3)">Edit</button>
+                <button type="button" class="btn btn-primary" onclick="finishTrip()">Confirm & Save</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    const data = {
+        "North America": { "USA": ["New York", "California", "Florida", "Texas"], "Canada": ["Ontario", "British Columbia", "Quebec"] },
+        "Europe": { "France": ["Paris", "Lyon", "Nice"], "Italy": ["Rome", "Florence", "Venice"], "Germany": ["Berlin", "Munich"] },
+        "Asia": { "Japan": ["Tokyo", "Kyoto", "Osaka"], "Thailand": ["Bangkok", "Chiang Mai"], "India": ["Delhi", "Mumbai", "Goa"] }
+    };
+
+    function handleContinentChange() {
+        const cont = document.getElementById('continent').value;
+        const countrySel = document.getElementById('country');
+        const regionSel = document.getElementById('region');
+        
+        countrySel.innerHTML = '<option value="">Select Country</option>';
+        regionSel.innerHTML = '<option value="">Select City</option>';
+        regionSel.disabled = true;
+
+        if (cont) {
+            countrySel.disabled = false;
+            Object.keys(data[cont]).forEach(c => {
+                countrySel.add(new Option(c, c));
+            });
+        } else {
+            countrySel.disabled = true;
+        }
+    }
+
+    function handleCountryChange() {
+        const cont = document.getElementById('continent').value;
+        const country = document.getElementById('country').value;
+        const regionSel = document.getElementById('region');
+        const label = document.getElementById('regionLabel');
+
+        regionSel.innerHTML = '<option value="">Select Option</option>';
+        label.innerText = country === "USA" ? "State" : "City";
+
+        if (country) {
+            regionSel.disabled = false;
+            data[cont][country].forEach(r => {
+                regionSel.add(new Option(r, r));
+            });
+        } else {
+            regionSel.disabled = true;
+        }
+    }
+
+    function validateAndNext(step) {
+        const currentSection = document.querySelector('.section.active');
+        const inputs = currentSection.querySelectorAll('[required]');
+        let valid = true;
+
+        inputs.forEach(input => {
+            if (!input.value) {
+                input.style.borderColor = 'var(--error)';
+                valid = false;
+            } else {
+                input.style.borderColor = 'var(--border)';
+            }
+        });
+
+        if (valid) goStep(step);
+    }
+
+    function goStep(step) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.step').forEach((s, idx) => {
+            s.classList.remove('active', 'completed');
+            if (idx + 1 < step) s.classList.add('completed');
+            if (idx + 1 === step) s.classList.add('active');
+        });
+        document.getElementById('step' + step).classList.add('active');
+    }
+
+    function buildSummary() {
+        const fields = ['continent', 'country', 'region', 'startDate', 'endDate', 'guests', 'budget', 'style'];
+        let html = '';
+        fields.forEach(f => {
+            const val = document.getElementById(f).value;
+            html += `<div class="summary-item"><span class="summary-label">${f.toUpperCase()}</span><span>${val}</span></div>`;
+        });
+        document.getElementById('summaryOutput').innerHTML = html;
+        goStep(4);
+    }
+
+    function finishTrip() {
+        alert("Trip Saved! You can now find this in your 'My Trips' dashboard.");
+        // Optional: Save to localStorage here
+        location.reload();
+    }
+</script>
+</body>
+</html>
+
