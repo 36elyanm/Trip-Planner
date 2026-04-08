@@ -1,0 +1,56 @@
+.trip-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 16px 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.trip-header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.trip-icon {
+  font-size: 28px;
+}
+
+.trip-name {
+  font-size: 22px;
+  font-weight: 700;
+  cursor: pointer;
+  border-bottom: 2px dashed rgba(255,255,255,0.4);
+  padding-bottom: 1px;
+}
+
+.trip-name:hover {
+  border-bottom-color: white;
+}
+
+.trip-name-input {
+  font-size: 22px;
+  font-weight: 700;
+  background: rgba(255,255,255,0.15);
+  border: 2px solid white;
+  border-radius: 6px;
+  color: white;
+  padding: 2px 8px;
+  outline: none;
+  font-family: inherit;
+  min-width: 200px;
+}
+
+.trip-name-input::placeholder {
+  color: rgba(255,255,255,0.6);
+}
+
+.trip-subtitle {
+  margin-left: auto;
+  font-size: 13px;
+  opacity: 0.75;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}

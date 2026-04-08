@@ -1,0 +1,81 @@
+.day-panel {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.day-panel--empty {
+  min-height: 200px;
+  justify-content: center;
+}
+
+.day-panel-empty-state {
+  text-align: center;
+  padding: 32px 24px;
+  color: #a0aec0;
+}
+
+.day-panel-empty-icon {
+  font-size: 40px;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.day-panel-empty-state p {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.day-panel-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #edf2f7;
+  background: #f7fafc;
+}
+
+.day-panel-date {
+  font-size: 15px;
+  font-weight: 700;
+  color: #2d3748;
+}
+
+.day-panel-count {
+  font-size: 12px;
+  color: #a0aec0;
+  margin-top: 2px;
+  display: block;
+}
+
+.day-panel-events {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.day-panel-no-events {
+  text-align: center;
+  color: #cbd5e0;
+  font-size: 13px;
+  padding: 24px 0;
+}
+
+.day-panel-add-btn {
+  margin: 0 12px 12px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 2px dashed #bee3f8;
+  color: #667eea;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 0.15s, border-color 0.15s;
+  width: calc(100% - 24px);
+}
+
+.day-panel-add-btn:hover {
+  background: #ebf8ff;
+  border-color: #667eea;
+}
