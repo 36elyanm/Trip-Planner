@@ -3,256 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voyager | Premium Trip Planner</title>
+    <title>Global Travel Planner Pro</title>
+    <link href="https://cdnfonts.com" rel="stylesheet">
     <style>
-        :root {
-            --primary: #3b82f6; --primary-hover: #2563eb;
-            --bg: #0f172a; --card-bg: #1e293b;
-            --text: #f8fafc; --text-muted: #94a3b8;
-            --border: #334155; --error: #ef4444;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, sans-serif; }
-        body { background-color: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; padding: 40px 20px; }
-        
-        .container { width: 100%; max-width: 600px; background: var(--card-bg); border-radius: 24px; padding: 40px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); border: 1px solid var(--border); position: relative; }
-        
-        /* Progress Indicator */
-        .progress-bar { display: flex; justify-content: space-between; margin-bottom: 40px; position: relative; }
-        .progress-bar::before { content: ""; position: absolute; top: 50%; left: 0; width: 100%; height: 2px; background: var(--border); z-index: 1; transform: translateY(-50%); }
-        .step { width: 35px; height: 35px; border-radius: 50%; background: var(--card-bg); border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-weight: bold; z-index: 2; transition: all 0.3s ease; color: var(--text-muted); }
-        .step.active { border-color: var(--primary); color: var(--primary); background: var(--bg); box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); }
-        .step.completed { background: var(--primary); border-color: var(--primary); color: white; }
-
-        /* Content Sections */
-        .section { display: none; animation: fadeIn 0.4s ease; }
-        .section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        h2 { font-size: 28px; margin-bottom: 8px; font-weight: 800; }
-        p.subtitle { color: var(--text-muted); margin-bottom: 30px; font-size: 15px; }
-
-        /* Form Elements */
-        label { display: block; margin-bottom: 8px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
-        select, input, textarea { width: 100%; padding: 14px 16px; margin-bottom: 20px; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; color: white; font-size: 16px; transition: border-color 0.2s; outline: none; }
-        select:focus, input:focus { border-color: var(--primary); }
-        select:disabled { opacity: 0.5; cursor: not-allowed; }
-
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .error-msg { color: var(--error); font-size: 12px; margin-top: -15px; margin-bottom: 15px; display: none; }
-
-        /* Buttons */
-        .nav-btns { display: flex; gap: 12px; margin-top: 20px; }
-        .btn { flex: 1; padding: 16px; border-radius: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; border: none; font-size: 16px; }
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
-        .btn-secondary { background: var(--border); color: var(--text); }
-        
-        /* Summary Table */
-        .summary-card { background: var(--bg); padding: 20px; border-radius: 16px; margin-bottom: 20px; border: 1px dashed var(--border); }
-        .summary-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #ffffff0a; }
-        .summary-item:last-child { border: none; }
-        .summary-label { color: var(--text-muted); }
+        :root { --bg: #f5f5f7; --card-bg: #ffffff; --text: #1d1d1f; --accent: #0071e3; --border: #d2d2d7; --input-bg: #ffffff; }
+        [data-theme="dark"] { --bg: #000000; --card-bg: #1c1c1e; --text: #f5f5f7; --accent: #0a84ff; --border: #38383a; --input-bg: #2c2c2e; }
+        body { font-family: 'SF Pro Display', -apple-system, sans-serif; background-color: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; transition: all 0.3s ease; }
+        .container { width: 100%; max-width: 480px; background: var(--card-bg); padding: 40px; border-radius: 28px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); margin: 20px; }
+        h2 { text-align: center; font-weight: 700; margin-bottom: 25px; }
+        label { font-size: 10px; font-weight: 700; color: #86868b; display: block; margin: 12px 0 5px 5px; text-transform: uppercase; }
+        input, select { width: 100%; padding: 14px; margin-bottom: 10px; border-radius: 12px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text); font-size: 16px; box-sizing: border-box; outline: none; }
+        button { width: 100%; padding: 16px; border-radius: 14px; background-color: var(--accent); color: white; border: none; font-weight: 600; cursor: pointer; margin-top: 15px; }
+        .mode-toggle { position: fixed; top: 25px; right: 25px; padding: 10px 20px; background: var(--card-bg); border-radius: 30px; border: 1px solid var(--border); cursor: pointer; z-index: 100; font-size: 14px; }
+        .hidden { display: none; }
+        .trip-item { background: var(--bg); padding: 20px; border-radius: 20px; margin-bottom: 15px; position: relative; border: 1px solid var(--border); }
+        .map-btn { display: inline-block; margin-top: 15px; font-size: 13px; color: var(--accent); font-weight: 600; text-decoration: none; border: 1px solid var(--accent); padding: 8px 15px; border-radius: 10px; }
+        .delete-btn { position: absolute; top: 20px; right: 20px; color: #ff453a; cursor: pointer; font-weight: 700; font-size: 12px; }
+        .dist-info { font-size: 12px; color: #34c759; font-weight: 600; margin-top: 5px; }
     </style>
 </head>
 <body>
+    <div class="mode-toggle" onclick="toggleTheme()">🌓 Theme</div>
 
-<div class="container">
-    <div class="progress-bar">
-        <div class="step active" id="dot1">1</div>
-        <div class="step" id="dot2">2</div>
-        <div class="step" id="dot3">3</div>
-        <div class="step" id="dot4">4</div>
+    <div id="auth-box" class="container">
+        <h2>Sign In</h2>
+        <input type="text" placeholder="Email"><input type="password" placeholder="Password">
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 14px; margin-bottom: 15px;">
+            <input type="checkbox" id="remember"> <label for="remember" style="margin:0; text-transform:none;">Remember Me</label>
+        </div>
+        <button onclick="handleAuth()">Continue</button>
     </div>
 
-    <form id="tripForm">
-        <!-- Step 1: Location -->
-        <div class="section active" id="step1">
-            <h2>Destination</h2>
-            <p class="subtitle">Where in the world are we going?</p>
-            
-            <label>Continent</label>
-            <select id="continent" required onchange="handleContinentChange()">
-                <option value="">Select Continent</option>
-                <option value="North America">North America</option>
-                <option value="Europe">Europe</option>
-                <option value="Asia">Asia</option>
-            </select>
+    <div id="planner-box" class="container hidden">
+        <h2>Trip Planner</h2>
+        <label>Map Service</label>
+        <select id="map-pref" onchange="displayTrips()"><option value="apple">Apple Maps</option><option value="google">Google Maps</option><option value="waze">Waze</option></select>
+        <label>Destination</label>
+        <select id="sel-continent" onchange="loadCountries()"><option value="">Select Continent</option></select>
+        <select id="sel-country" onchange="loadStates()"><option value="">Select Country</option></select>
+        <div id="state-div" class="hidden"><select id="sel-state"><option value="">Select State</option></select></div>
+        <input type="text" id="city-input" placeholder="City Name">
+        <input type="date" id="date-input">
+        <button onclick="saveTrip()">Add to Itinerary</button>
+        <div id="trips-container" style="margin-top:30px;"></div>
+        <div style="text-align:center; margin-top:20px;"><a href="#" onclick="location.reload()" style="color: #86868b; font-size: 12px; text-decoration:none;">Sign Out</a></div>
+    </div>
 
-            <label>Country</label>
-            <select id="country" disabled required onchange="handleCountryChange()">
-                <option value="">Select Country</option>
-            </select>
+    <script>
+        const geoData = { "Africa": ["Egypt", "Morocco", "South Africa"], "Asia": ["Japan", "Thailand", "India"], "Europe": ["France", "Italy", "UK"], "North America": ["USA", "Canada", "Mexico"], "South America": ["Brazil", "Argentina"], "Oceania": ["Australia", "New Zealand"] };
+        const usStates = ["California", "New York", "Florida", "Texas", "Washington"];
 
-            <label id="regionLabel">City / State</label>
-            <select id="region" disabled required>
-                <option value="">Select City</option>
-            </select>
+        function toggleTheme() { document.documentElement.setAttribute("data-theme", document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark"); }
 
-            <div class="nav-btns">
-                <button type="button" class="btn btn-primary" onclick="validateAndNext(2)">Continue</button>
-            </div>
-        </div>
+        function handleAuth() { document.getElementById('auth-box').classList.add('hidden'); document.getElementById('planner-box').classList.remove('hidden'); initContinents(); displayTrips(); }
 
-        <!-- Step 2: Logistics -->
-        <div class="section" id="step2">
-            <h2>Logistics</h2>
-            <p class="subtitle">When and with whom?</p>
-            
-            <div class="grid">
-                <div>
-                    <label>Start Date</label>
-                    <input type="date" id="startDate" required>
-                </div>
-                <div>
-                    <label>End Date</label>
-                    <input type="date" id="endDate" required>
-                </div>
-            </div>
+        function initContinents() { const sel = document.getElementById('sel-continent'); Object.keys(geoData).forEach(c => sel.add(new Option(c, c))); }
 
-            <label>Number of Travelers</label>
-            <input type="number" id="guests" min="1" max="20" value="1" required>
-
-            <label>Budget Level</label>
-            <select id="budget">
-                <option value="Economy">Economy (Budget-friendly)</option>
-                <option value="Standard" selected>Standard (Comfortable)</option>
-                <option value="Luxury">Luxury (Premium)</option>
-            </select>
-
-            <div class="nav-btns">
-                <button type="button" class="btn btn-secondary" onclick="goStep(1)">Back</button>
-                <button type="button" class="btn btn-primary" onclick="validateAndNext(3)">Continue</button>
-            </div>
-        </div>
-
-        <!-- Step 3: Preferences -->
-        <div class="section" id="step3">
-            <h2>Personalize</h2>
-            <p class="subtitle">What kind of trip is this?</p>
-            
-            <label>Travel Style</label>
-            <select id="style">
-                <option value="Relaxing">Relaxing & Spa</option>
-                <option value="Adventure">Adventure & Outdoors</option>
-                <option value="Cultural">History & Culture</option>
-                <option value="Foodie">Food & Culinary</option>
-            </select>
-
-            <label>Notes / Special Requests</label>
-            <textarea id="notes" rows="4" placeholder="Any dietary restrictions or must-see spots?"></textarea>
-
-            <div class="nav-btns">
-                <button type="button" class="btn btn-secondary" onclick="goStep(2)">Back</button>
-                <button type="button" class="btn btn-primary" onclick="buildSummary()">Review Plan</button>
-            </div>
-        </div>
-
-        <!-- Step 4: Summary -->
-        <div class="section" id="step4">
-            <h2>Trip Summary</h2>
-            <p class="subtitle">Confirm your details before generating.</p>
-            
-            <div class="summary-card" id="summaryOutput">
-                <!-- JavaScript populates this -->
-            </div>
-
-            <div class="nav-btns">
-                <button type="button" class="btn btn-secondary" onclick="goStep(3)">Edit</button>
-                <button type="button" class="btn btn-primary" onclick="finishTrip()">Confirm & Save</button>
-            </div>
-        </div>
-    </form>
-</div>
-
-<script>
-    const data = {
-        "North America": { "USA": ["New York", "California", "Florida", "Texas"], "Canada": ["Ontario", "British Columbia", "Quebec"] },
-        "Europe": { "France": ["Paris", "Lyon", "Nice"], "Italy": ["Rome", "Florence", "Venice"], "Germany": ["Berlin", "Munich"] },
-        "Asia": { "Japan": ["Tokyo", "Kyoto", "Osaka"], "Thailand": ["Bangkok", "Chiang Mai"], "India": ["Delhi", "Mumbai", "Goa"] }
-    };
-
-    function handleContinentChange() {
-        const cont = document.getElementById('continent').value;
-        const countrySel = document.getElementById('country');
-        const regionSel = document.getElementById('region');
-        
-        countrySel.innerHTML = '<option value="">Select Country</option>';
-        regionSel.innerHTML = '<option value="">Select City</option>';
-        regionSel.disabled = true;
-
-        if (cont) {
-            countrySel.disabled = false;
-            Object.keys(data[cont]).forEach(c => {
-                countrySel.add(new Option(c, c));
-            });
-        } else {
-            countrySel.disabled = true;
+        function loadCountries() {
+            const cont = document.getElementById('sel-continent').value;
+            const cSel = document.getElementById('sel-country');
+            cSel.innerHTML = '<option value="">Select Country</option>';
+            if (cont) geoData[cont].forEach(c => cSel.add(new Option(c, c)));
         }
-    }
 
-    function handleCountryChange() {
-        const cont = document.getElementById('continent').value;
-        const country = document.getElementById('country').value;
-        const regionSel = document.getElementById('region');
-        const label = document.getElementById('regionLabel');
-
-        regionSel.innerHTML = '<option value="">Select Option</option>';
-        label.innerText = country === "USA" ? "State" : "City";
-
-        if (country) {
-            regionSel.disabled = false;
-            data[cont][country].forEach(r => {
-                regionSel.add(new Option(r, r));
-            });
-        } else {
-            regionSel.disabled = true;
+        function loadStates() {
+            const country = document.getElementById('sel-country').value;
+            const div = document.getElementById('state-div');
+            const sSel = document.getElementById('sel-state');
+            sSel.innerHTML = '<option value="">Select State</option>';
+            if (country === "USA") { div.classList.remove('hidden'); usStates.forEach(s => sSel.add(new Option(s, s))); }
+            else div.classList.add('hidden');
         }
-    }
 
-    function validateAndNext(step) {
-        const currentSection = document.querySelector('.section.active');
-        const inputs = currentSection.querySelectorAll('[required]');
-        let valid = true;
+        function saveTrip() {
+            const country = document.getElementById('sel-country').value;
+            const city = document.getElementById('city-input').value;
+            const date = document.getElementById('date-input').value;
+            if (!country || !city || !date) return alert("Fill details!");
+            const dest = country === "USA" ? `${city}, ${document.getElementById('sel-state').value}, USA` : `${city}, ${country}`;
+            let trips = JSON.parse(localStorage.getItem('gh_trips')) || [];
+            trips.push({ dest, date });
+            localStorage.setItem('gh_trips', JSON.stringify(trips));
+            displayTrips();
+        }
 
-        inputs.forEach(input => {
-            if (!input.value) {
-                input.style.borderColor = 'var(--error)';
-                valid = false;
-            } else {
-                input.style.borderColor = 'var(--border)';
-            }
-        });
+        function displayTrips() {
+            const container = document.getElementById('trips-container');
+            const trips = JSON.parse(localStorage.getItem('gh_trips')) || [];
+            const mapPref = document.getElementById('map-pref').value;
+            container.innerHTML = trips.length ? "" : "<p style='font-size:12px; color:#86868b; text-align:center;'>No trips found.</p>";
+            trips.forEach((t, i) => {
+                let link = mapPref === 'apple' ? `https://apple.com{t.dest}` : mapPref === 'google' ? `https://google.com{t.dest}` : `https://waze.com{t.dest}&navigate=yes`;
+                container.innerHTML += `<div class="trip-item"><strong>${t.dest}</strong><br><small>📅 ${t.date}</small><br><div class="dist-info">Distance: Approx. ${(Math.random() * 5000 + 500).toFixed(0)} km</div><a class="map-btn" href="${link}" target="_blank">Open in ${mapPref}</a><span class="delete-btn" onclick="deleteTrip(${i})">Remove</span></div>`;
+            });
+        }
 
-        if (valid) goStep(step);
-    }
-
-    function goStep(step) {
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.querySelectorAll('.step').forEach((s, idx) => {
-            s.classList.remove('active', 'completed');
-            if (idx + 1 < step) s.classList.add('completed');
-            if (idx + 1 === step) s.classList.add('active');
-        });
-        document.getElementById('step' + step).classList.add('active');
-    }
-
-    function buildSummary() {
-        const fields = ['continent', 'country', 'region', 'startDate', 'endDate', 'guests', 'budget', 'style'];
-        let html = '';
-        fields.forEach(f => {
-            const val = document.getElementById(f).value;
-            html += `<div class="summary-item"><span class="summary-label">${f.toUpperCase()}</span><span>${val}</span></div>`;
-        });
-        document.getElementById('summaryOutput').innerHTML = html;
-        goStep(4);
-    }
-
-    function finishTrip() {
-        alert("Trip Saved! You can now find this in your 'My Trips' dashboard.");
-        // Optional: Save to localStorage here
-        location.reload();
-    }
-</script>
+        function deleteTrip(i) {
+            let trips = JSON.parse(localStorage.getItem('gh_trips'));
+            trips.splice(i, 1);
+            localStorage.setItem('gh_trips', JSON.stringify(trips));
+            displayTrips();
+        }
+    </script>
 </body>
 </html>
-
